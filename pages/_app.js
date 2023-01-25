@@ -6,10 +6,10 @@ function MyApp({ Component, pageProps }) {
     return Component.getLayout(<Component {...pageProps} />);
   }
   return (
-    <>
+    <div>
       <Navbar />
       <Component {...pageProps} />
-    </>
+    </div>
   );
 }
 
