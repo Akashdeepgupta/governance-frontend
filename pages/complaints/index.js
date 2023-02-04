@@ -6,13 +6,15 @@ import Image from "next/image";
 import Link from "next/link";
 import algoliasearch from "algoliasearch/lite";
 import "instantsearch.css/themes/reset.css";
-import Downvote from "./Downvote";
-import Upvote from "./Upvote";
+
+import Downvote from "./downvote";
+import Upvote from "./upvote";
+
 import Completed from "../../assets/icons/COMPLETED.svg";
 import Discussion from "../../assets/icons/discussion.svg";
-import Pending from "../../assets/icons/pending.svg";
+import Pending from "../../assets/icons/PENDING.svg";
 import Share from "../../assets/icons/share.svg";
-import ShareCard from "../../components/ShareCard";
+import ShareCard from "../../components/shareCard";
 
 import {
   InstantSearch,
