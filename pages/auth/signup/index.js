@@ -118,7 +118,7 @@ function signup() {
                                 }
                         <p className="text-center">
                             Already have an account?{" "}
-                            <Link href="/login" legacyBehavior>
+                            <Link href="/auth/login" legacyBehavior>
                                 <a className="text-blue-500">Login</a>
                             </Link>
                         </p>
