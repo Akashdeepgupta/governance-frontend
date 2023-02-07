@@ -17,7 +17,7 @@ function signup() {
     
 
 
-    const handleSignUp = async (email, temp_password, password,message,setMessage,provisionUrl,setProvisionUrl) => {
+    const handleSignUp = async (email, temp_password, password) => {
         setDisableButton(true);
         const url = `${BACKEND_URL}authority/auth/signup/`;
         const data = {
@@ -28,12 +28,9 @@ function signup() {
         const response = await axios.post(url, data).catch((err) => {
             return err.response;
         });
-        console.log(response)
         if (response.status === 200) {
             setMessage("Successfully signed up");
-            console.log(response.data.qr_code)
             setProvisionUrl(response.data.qr_code);
-            console.log(provisionUrl)
         } else {
             if (response.data.message) {
                 setMessage(response.data.message);
@@ -46,14 +43,14 @@ function signup() {
     };
   return (
     <div>
-        <div className="md:ml-60 flex  flex-col md:flex-row h-screen p-6 md:p-12 ">
-            <div className="flex-1 p-12 hidden lg:inline">
+        <div className="md:ml-60 flex  flex-col md:flex-row h-screen p-6 md:p-12 bg-fuchsia-100 ">
+            <div className="flex-1 p-12 hidden lg:inline bg-green-50">
                 <div className="flex overflow-hidden rounded-md relative mx-2 ">
                     <ConsumerSvg className="h-full w-full" />
                 </div>
             </div>
             { provisionUrl === 'abc' ? (
-                <div className="flex-1 p-12 hidden lg:inline">
+                <div className="flex-1 p-12 hidden lg:inline bg-slate-100">
                     <form className=" flex flex-col flex-1 m-8 gap-6 mt-16">
                         <h1 className="text-center text-4xl mb-3 p-2">SignUp</h1>
                         {message && (
@@ -103,10 +100,6 @@ function signup() {
                                             email.current.value,
                                             temp_password.current.value,
                                             password.current.value,
-                                            message,
-                                            setMessage,
-                                            provisionUrl,
-                                            setProvisionUrl
                                         );
                                     }}
                                     disabled={disableButton}
@@ -119,7 +112,7 @@ function signup() {
                         <p className="text-center">
                             Already have an account?{" "}
                             <Link href="/auth/login" legacyBehavior>
-                                <a className="text-blue-500">Login</a>
+                                <a className="text-blue-500 underline">Login</a>
                             </Link>
                         </p>
                     </form>
@@ -127,13 +120,18 @@ function signup() {
             ) :
              (
                 <>
-                    <div className="flex flex-col flex-1 m-8 gap-6 mt-16 hidden lg:inline">
+                    setMessage("The QR code will be available for one time only Please Scan it save carefully !")
+                    <div className="lg:flex flex-col flex-1 m-8 gap-6 mt-16 hidden ">
                         <h1 className="text-center text-4xl mb-3 p-2">Scan QR</h1>
+                        <h3>{message}</h3>
                         <div className="flex justify-center">
                             <QRCodeSVG value={provisionUrl} size={256}/> 
                         </div> 
                     </div>
                     <div className="flex justify-center lg:hidden">
+                        <h1>
+                            QR Code Link 
+                        </h1>
                         <h1 className="text-center text:bold  ">
                             <Link href="provisionUrl" legacyBehavior>
                                 <a className="text-blue-500">Two 2fa</a>
