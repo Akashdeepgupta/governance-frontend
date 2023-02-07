@@ -4,9 +4,16 @@ import Menu from "../../assets/icons/menu.svg";
 import menulist from "./menulist";
 
 import { useRouter } from "next/router";
-function Navbar() {
+function Navbar({token}) {
   const [ToggleMenu, setToggleMenu] = React.useState(true);
   const router = useRouter();
+  const[toShow,setToShow]=React.useState(false);
+  React.useEffect(()=>{
+    if(token){
+      setToShow(true);
+    }
+  },[token])
+
   return (
     <>
       {/* mobile menu */}
@@ -31,7 +38,7 @@ function Navbar() {
               <li key={index}>
                 <Link href={item.link}>
                   <div
-                    className={`flex px-2 hover:text-zinc-100 ${
+                    className={`flex px-2 hover:text-zinc-100  ${
                       "/" + router.asPath.split("/")[1] ===
                       item.link.toLowerCase()
                         ? "font-bold text-white"
@@ -55,11 +62,15 @@ function Navbar() {
       <div className="hidden sm:inline fixed left-0 bg-zinc-800 h-full p-4 pl-6 pt-10 w-60">
         <ul className="flex flex-col gap-6">
           {menulist.map((item, index) => {
+            console.log(token);
+            console.log(item.name);
+            if(token && item.name === "LogIn") return null;
+            if(token && item.name === "SignUp") return null;
             return (
               <li key={index}>
                 <Link href={item.link}>
                   <div
-                    className={`flex px-2 hover:text-zinc-100 ${
+                    className={`flex px-2 hover:text-zinc-100 cursor-pointer ${
                       "/" + router.asPath.split("/")[1] ===
                       item.link.toLowerCase()
                         ? "font-bold text-white"
@@ -80,3 +91,11 @@ function Navbar() {
 }
 
 export default Navbar;
+
+export async function getServerSideProps({ req, res }) {
+  const token = req.cookies.access_token || null;
+  console.log("andar wala maal",token);
+  return {
+    props: { token: token },
+  };
+}

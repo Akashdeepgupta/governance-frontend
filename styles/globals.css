@@ -7,7 +7,7 @@
 
 
 
-/* .ais-SearchBox-input{
+.ais-SearchBox-input{
     background-color: #fff;
     border: 1px solid #8b8d91;
     border-radius: 10px;
@@ -15,22 +15,23 @@
     font-size: 1.2rem;
     width: 27.5rem;
     height: 3rem;
-    padding: 1rem 0.5rem;
-  } */
+    /* padding: 1rem 2.5rem; */
+  }
 
-  /* .ais-SearchBox-input::placeholder{
+  .ais-SearchBox-input::placeholder{
     color: #6e6769;
     font-size: 1.2rem;
     font-weight: 500;
-  } */
-
-/* .ais-SearchBox-submitIcon{
+    align-items: last baseline;
+  }
+/* 
+.ais-SearchBox{
     width: 30px;
     height: 30px;
     margin-left: 8px;
-    margin-top: 8px;
-}
-    */
+    margin-top: 8px; */
+/* } */
+   
   
 
     .ais-Hits-list{

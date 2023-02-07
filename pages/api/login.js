@@ -13,10 +13,8 @@ export default async function login(req,res) {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
     }).then((res) => {
-        console.log(res)
         return res
     }).catch((err) => {
-        console.log(err.response)
         return err.response
     })
 

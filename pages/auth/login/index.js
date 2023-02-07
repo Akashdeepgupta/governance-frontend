@@ -1,4 +1,4 @@
-import React, { useRef } from "react"; 
+import React, { useEffect, useRef } from "react"; 
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import LoginSVG from '../../../assets/icons/adityabirla.svg'
@@ -13,15 +13,19 @@ export default function index({token}) {
     const router = useRouter();
     const [disableButton, setDisableButton] = React.useState(false);
 
-    if(token){
-      (async () => { 
-        router.push("/complaints")
-      });
-    }else{
-      (async () => {
-        router.push("/auth/login")
-      });
-    }
+
+    useEffect(() => {
+      if(token){
+        (async () => { 
+          router.push("/complaints")
+        });
+      }else{
+        (async () => {
+          router.push("/auth/login")
+        });
+      }
+    }, []);
+
     
     async function handleLogin(username, password, otp) {
         const response = await axios
@@ -56,8 +60,8 @@ export default function index({token}) {
 
   return (
     <div>
-      <div className="md:ml-60 flex  flex-col md:flex-row h-screen p-6 md:p-12 ">
-        <div className="flex-1 p-12 hidden lg:inline">
+      <div className="md:ml-60 flex  flex-col md:flex-row h-screen p-6 md:p-12  ">
+        <div className="flex-1 p-12 hidden lg:inline ">
           <div className="flex overflow-hidden rounded-md relative mx-2 mt-24">
             <LoginSVG className="h-full w-full" />
           </div>
@@ -66,7 +70,7 @@ export default function index({token}) {
         <form className=" flex flex-col flex-1 m-8 gap-6 mt-24">
           <h1 className="text-center text-4xl mb-3 p-2">Login</h1>
           {message && (
-            <p className=" font-mono bg-red-300 border-2 border-red-400 px-2 py-1 rounded-lg text-center text-red-900">
+            <p className=" font-mono bg-green-300 border-2 border-green-500 px-2 py-1 rounded-lg text-center text-red-900">
               {message}
             </p>
           )}

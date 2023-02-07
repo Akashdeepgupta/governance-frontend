@@ -13,6 +13,20 @@ export default function Document() {
         ></link> */}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css"></link>
         <meta name="theme-color" content="#fff" />
+         
+          {/* <script
+            type="module"
+            src="https://cdn.jsdelivr.net/npm/@duetds/date-picker@1.4.0/dist/duet/duet.esm.js"
+          ></script> */}
+          {/* <script
+            nomodule
+            src="https://cdn.jsdelivr.net/npm/@duetds/date-picker@1.4.0/dist/duet/duet.js"
+          ></script>
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@duetds/date-picker@1.4.0/dist/duet/themes/default.css"
+          /> */}
+
       </Head>
       <body>
         <Main />
