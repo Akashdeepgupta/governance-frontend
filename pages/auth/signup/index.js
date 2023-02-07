@@ -50,7 +50,7 @@ function signup() {
                 </div>
             </div>
             { provisionUrl === 'abc' ? (
-                <div className="flex-1 p-12 hidden lg:inline bg-slate-100">
+                <div className="flex-1 p-12 lg:inline bg-slate-100">
                     <form className=" flex flex-col flex-1 m-8 gap-6 mt-16">
                         <h1 className="text-center text-4xl mb-3 p-2">SignUp</h1>
                         {message && (

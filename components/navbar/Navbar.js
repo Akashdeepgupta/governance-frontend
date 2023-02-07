@@ -26,7 +26,7 @@ function Navbar({token}) {
         <Menu className="fill-black" />
       </button>
       <div
-        className={`sm:hidden  fixed flex ${
+        className={`sm:hidden z-20 fixed flex ${
           ToggleMenu
             ? "-left-[1200px] ease-in duration-300"
             : "left-0 ease-out duration-300"
@@ -62,8 +62,8 @@ function Navbar({token}) {
       <div className="hidden sm:inline fixed left-0 bg-zinc-800 h-full p-4 pl-6 pt-10 w-60">
         <ul className="flex flex-col gap-6">
           {menulist.map((item, index) => {
-            console.log(token);
-            console.log(item.name);
+            // console.log(token);
+            // console.log(item.name);
             if(token && item.name === "LogIn") return null;
             if(token && item.name === "SignUp") return null;
             return (
@@ -94,7 +94,7 @@ export default Navbar;
 
 export async function getServerSideProps({ req, res }) {
   const token = req.cookies.access_token || null;
-  console.log("andar wala maal",token);
+  // console.log("andar wala maal",token);
   return {
     props: { token: token },
   };
