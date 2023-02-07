@@ -185,19 +185,19 @@ const Index = ({ token, ward_slug }) => {
   // const ward_slug = "AH-AMC-001"
 
   return (
-    <div className="md:ml-60 p-1 ">
+    <div className="md:ml-60 p-8 ">
       <InstantSearch indexName="challenge2" searchClient={searchClient}>
-        <div className="flex">
-          <div className="w-1/2 ">
-            <div className="bg-gray-100 p-4 border-r-2 border-b-2">
+        <div className="flex ">
+          <div className="w-1/2  ">
+            <div className="fixed top-11 md:top-0  z-10 bg-gray-100 p-4 border-r-2 border-b-2">
               <SearchBox />
             </div>
-            <div className=" p-4 bg-orange-50">
+            <div className="mt-16 p-16 md:p-4 w-full ">
               <Hits hitComponent={Hit} />
               <Configure filters={`ward_slug:${ward_slug}`} hitsPerPage={5} />
             </div>
           </div>
-          <div className="fixed right-0 top-0 w-5/12 bg-gray-100 pt-10 pl-4 border-l-2 ">
+          <div className="hidden md:inline fixed right-0 top-0 w-2/5 bg-gray-100 pt-10 pl-4 border-l-2 ">
             <Panel header="Complaint Types ">
               <MenuSelect attribute="complaint_type_name" />
             </Panel>
