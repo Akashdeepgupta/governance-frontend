@@ -5,8 +5,6 @@ function index() {
     <div>index</div>
   )
 } 
-
-import React from "react";
 import { Tooltip } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { format, formatDistanceToNow, fromUnixTime } from "date-fns";
