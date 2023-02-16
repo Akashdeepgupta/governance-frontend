@@ -1,18 +1,25 @@
 import Link from "next/link";
-import React from "react";
+import React,{useEffect,useState} from "react";
 import Menu from "../../assets/icons/menu.svg";
 import menulist from "./menulist";
+import Cookies from "js-cookie"; 
 
 import { useRouter } from "next/router";
-function Navbar({token}) {
+ export default function Navbar() {
   const [ToggleMenu, setToggleMenu] = React.useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(Cookies.get('isLoggedIn')||false);
   const router = useRouter();
-  const[toShow,setToShow]=React.useState(false);
-  React.useEffect(()=>{
-    if(token){
-      setToShow(true);
+  
+  console.log("hii",Cookies.get('isLoggedIn'))
+  console.log("state",isLoggedIn)
+
+  useEffect(() => {
+    const isUserLoggedIn = Cookies.get('isLoggedIn');
+    if (isUserLoggedIn) {
+      setIsLoggedIn(true);
     }
-  },[token])
+  }, [isLoggedIn],[Cookies.get('isLoggedIn')],[]); 
+
 
   return (
     <>
@@ -34,6 +41,10 @@ function Navbar({token}) {
       >
         <ul className="flex-1 flex flex-col gap-6 p-4 pl-6 pt-10 bg-zinc-800">
           {menulist.map((item, index) => {
+            if(item.name === "Logout" && isLoggedIn === false) return null;
+            if(item.name === "LogIn"  &&  isLoggedIn === true) return null;
+            if(item.name === "SignUp" && isLoggedIn === true) return null;
+
             return (
               <li key={index}>
                 <Link href={item.link}>
@@ -59,13 +70,12 @@ function Navbar({token}) {
         ></div>
       </div>
 
-      <div className="hidden sm:inline fixed left-0 bg-zinc-800 h-full p-4 pl-6 pt-10 w-60">
+      <div className="hidden sm:inline fixed left-0 bg-zinc-800 h-full p-4 pl-6 pt-10 z-20 w-60">
         <ul className="flex flex-col gap-6">
           {menulist.map((item, index) => {
-            // console.log(token);
-            // console.log(item.name);
-            if(token && item.name === "LogIn") return null;
-            if(token && item.name === "SignUp") return null;
+            if(item.name === "Logout" && isLoggedIn === false) return null;
+            if(item.name === "LogIn" && isLoggedIn === true) return null;
+            if(item.name === "SignUp" && isLoggedIn === true) return null;
             return (
               <li key={index}>
                 <Link href={item.link}>
@@ -88,14 +98,4 @@ function Navbar({token}) {
       </div>
     </>
   );
-}
-
-export default Navbar;
-
-export async function getServerSideProps({ req, res }) {
-  const token = req.cookies.access_token || null;
-  // console.log("andar wala maal",token);
-  return {
-    props: { token: token },
-  };
 }

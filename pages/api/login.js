@@ -24,8 +24,18 @@ export default async function login(req,res) {
             secure: false,
             sameSite: "strict",
             path: "/",
+            maxAge: 10000 * 60 * 30, // 30 minutes
+        });
+
+        Cookies(req, res).set("isLoggedIn", true, {
+            httpOnly: false,
+            secure: false,
+            sameSite: "strict",
+            path: "/",
             maxAge: 1000 * 60 * 30, // 30 minutes
         });
+
+
         res.status(200).json({
             ...response.data
         })
