@@ -4,7 +4,7 @@ import React from "react";
 
 import UpvoteSVG from "../../assets/icons/upvote.svg";
 import { fetchVoteCount, handleVote } from "../../utils";
-function Upvote({ setVote, setLikeCount, ComplaintId, token, vote }) {
+function Upvote({ vote }) {
   const router = useRouter();
   return (
     <Tooltip content={"Upvote"}>

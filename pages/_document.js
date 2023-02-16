@@ -14,6 +14,19 @@ export default function Document() {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css"></link>
         <meta name="theme-color" content="#fff" />
          
+
+
+
+        <link
+          href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css"
+          rel="stylesheet"
+        />
+        <link
+          rel="stylesheet"
+          href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css"
+          type="text/css"
+        />
+
           {/* <script
             type="module"
             src="https://cdn.jsdelivr.net/npm/@duetds/date-picker@1.4.0/dist/duet/duet.esm.js"

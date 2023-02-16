@@ -1,73 +1,37 @@
-import React from 'react'
+import MapboxGL from "mapbox-gl/dist/mapbox-gl.js";
 
-function index() {
-  return (
-    <div>index</div>
-  )
-} 
+import Downvote from "../../components/complaints/downvote";
+import Upvote from "../../components/complaints/upvote";
+
+import Completed from "../../assets/icons/COMPLETED.svg";
+import Discussion from "../../assets/icons/discussion.svg";
+import Pending from "../../assets/icons/PENDING.svg";
+import Share from "../../assets/icons/share.svg";
+import ShareCard from "../../components/shareCard";
 import { Tooltip } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { format, formatDistanceToNow, fromUnixTime } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
-import algoliasearch from "algoliasearch/lite";
-import "instantsearch.css/themes/reset.css";
 
-import Downvote from "../../../components/complaints/downvote";
-import Upvote from "../../../components/complaints/upvote";
-
-import Completed from "../../../assets/icons/COMPLETED.svg";
-import Discussion from "../../../assets/icons/discussion.svg";
-import Pending from "../../../assets/icons/PENDING.svg";
-import Share from "../../../assets/icons/share.svg";
-import ShareCard from "../../../components/shareCard";
-
-import {
-  InstantSearch,
-  Hits,
-  SearchBox,
-  Pagination,
-  SortBy,
-  Highlight,
-  ClearRefinements,
-  RefinementList,
-  Configure,
-  Menu,
-  MenuSelect,
-  Panel,
-} from "react-instantsearch-dom";
-import { clearStorage } from "mapbox-gl";
-
-const searchClient = algoliasearch(
-  "7EZSSRLOLR",
-  "25c7cb6a837952c67aac05d561c3c32b"
-);
-
-const Index = () => {
-  function Hit(props) {
+export default function Hit(props) {
     const {
       complaint_desc,
-      complaint_sub_type,
       complaint_title,
-      complaint_type, //complaint_id
       complaint_type_name,
       completed_status,
       created_at,
       dislike_count,
-      latitude,
       like_count,
-      longitude,
       no_of_comments,
       objectID,
       photo_url,
       profile_picture,
       username,
-      ward_id,
-      ward_slug,
+      ward_slug
     } = props.hit;
 
     const router = useRouter();
-    // const FRONTEND_URL = "https://cityzen-ruby.vercel.app/";
     return (
       <div key={objectID} className="flex shadow-md bg-gray-100 md:p-4">
         <div className="flex flex-col items-center gap-2">
@@ -84,7 +48,6 @@ const Index = () => {
             <Upvote
               setLikeCount={like_count}
               ComplaintId={objectID}
-              // token={token}
               vote={like_count}
               placement="top"
             />
@@ -92,13 +55,11 @@ const Index = () => {
             <Downvote
               setLikeCount={dislike_count}
               ComplaintId={objectID}
-              // token={token}
               vote={dislike_count}
               placement="bottom"
             />
           </div>
 
-          {/* //may be issue here */}
           <Link
             className="my-2"
             href={`/complaints/${ward_slug}/${objectID}#comments`}
@@ -152,24 +113,16 @@ const Index = () => {
               </Tooltip>
             </div>
           </div>
-          <div className="flex min-h-60 h-72 w-90 overflow-hidden rounded-md relative mx-2">
+          <div className="flex min-h-60 h-72 w-90 overflow-hidden rounded-md relative mx-2 bg-black">
             <Image
               src={photo_url}
               alt="Picture of the complaint"
               layout="fill"
               data-nimg="fill"
-              sizes="(max-width: 768px) 100vw,
-              (max-width: 1200px) 50vw,
-              33vw"
-              className="object-fit-cover"
+              objectFit="contain"
+              sizes="(max-width: 640px) 100vw, 640px"
+              className="object-fit-cover p-8"
             />
-            {/* <Image
-          src={Complaint.photo_url}
-          width={1920}
-          height={1598}
-          layout="responsive"
-          alt="Picture of the complaint"
-        /> */}
           </div>
           <div className="flex flex-col gap-1 p-2">
             <div className="">{complaint_title}</div>
@@ -189,55 +142,3 @@ const Index = () => {
       </div>
     );
   }
-
-  return (
-    <div className="md:ml-60 p-4">
-      <InstantSearch indexName="challenge2" searchClient={searchClient} >
-
-        <SearchBox placeholder="Search for products " />
-        <div className="flex gap-4 border-t-8">
-          <div className="flex-1  border-r-2">
-            <Hits hitComponent={Hit} />
-            {/* <Configure  hitsPerPage={5} /> */}
-            <Configure filters="ward_slug:AH-AMC-001" hitsPerPage={5} />
-            {/* <Configure filters="ward_id:1" hitsPerPage={5} /> */}
-          </div>
-          <div className="flex-1 pt-4  ">
-            <Panel header="Complaint Types ">
-              <MenuSelect attribute="complaint_type_name" />
-            </Panel>
-            <Panel header="Filters" className="pt-4">
-              <SortBy
-                  defaultRefinement="challenge2_most_voted"
-                  items={[
-                    { label: "Recent", value: "challenge2" },
-                    { label: "most voted", value: "challenge2_most_voted" }, 
-                  ]}
-
-              />
-            </Panel>
-          </div>
-        </div>
-      </InstantSearch>
-    </div>
-  );
-};
-
-export default Index;
-
-
-export async function getServerSideProps({ req, res,params }) {
-  const token = req.cookies.access_token || null;
-  if (!token) {
-    return {
-      redirect: {
-        destination: "/auth/login",
-        permanent: false,
-      },
-    };
-  }
-  
-  return {
-    props: { token },
-  };
-}

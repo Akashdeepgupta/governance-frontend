@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from "react";
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import LoginSVG from '../../../assets/icons/adityabirla.svg'
-import Router from "next/router";
 
 
 export default function index({token}) {
@@ -41,7 +40,7 @@ export default function index({token}) {
             return err.response;
           });
         if (response.status === 200) {
-          Router.push("/complaints")
+          router.push("/complaints")
           setMessage("Logged in Successfully")
         } else {
           if (response.data.message) {
