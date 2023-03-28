@@ -1,4 +1,5 @@
 import MapboxGL from "mapbox-gl/dist/mapbox-gl.js";
+import React, { useEffect, useState } from "react";
 
 import Downvote from "../../components/complaints/downvote";
 import Upvote from "../../components/complaints/upvote";
@@ -13,6 +14,7 @@ import { useRouter } from "next/router";
 import { format, formatDistanceToNow, fromUnixTime } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
+import {getCouncillorUpdates} from '../../utils'
 
 export default function Hit(props) {
     const {
@@ -31,7 +33,14 @@ export default function Hit(props) {
       ward_slug
     } = props.hit;
 
-    // console.log(props.hit)
+    const[councillorstatus, setCouncillorstatus] = useState("");
+
+    useEffect(() => {
+        getCouncillorUpdates(objectID).then((data) => {
+          setCouncillorstatus(data.completed_status);
+        });
+    }, [councillorstatus]);
+
 
     const router = useRouter();
     return (
@@ -132,6 +141,9 @@ export default function Hit(props) {
             <div className="text-sm py-1 font-semibold flex items-center">
               <div className="bg-gray-500 rounded-lg py-1 px-2 text-white text-sm">
                 {complaint_type_name}
+              </div>
+              <div>
+                <h1>Councillor's Status: {councillorstatus}</h1>
               </div>
               <Link href={`/complaints/${ward_slug}/${objectID}`}>
                 <div className="cursor-pointer ml-auto bg-gray-800 font-thin text-zinc-200 py-1 px-3 rounded-3xl">

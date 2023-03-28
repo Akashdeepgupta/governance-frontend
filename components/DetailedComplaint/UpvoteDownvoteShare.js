@@ -37,7 +37,7 @@ function UpvoteDownvoteShare({ complaintData }) {
           </Tooltip>
         </div>
         <div className="ml-auto">
-            {complaintData.completed_status}
+            From user Side: {complaintData.completed_status}
         </div>
       </div>
     </div>

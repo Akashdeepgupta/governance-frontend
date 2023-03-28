@@ -38,7 +38,7 @@ const Index = ({ token, ward_slug }) => {
   return (
     <div className="md:ml-60 ">
       <InstantSearch indexName="dev_CARTOONS" searchClient={searchClient}>
-        <Configure filters={`ward_slug:${ward_slug}`} hitsPerPage={1} />
+        <Configure filters={`ward_slug:${ward_slug}`} hitsPerPage={5} />
         
         <div className="flex ">
           
