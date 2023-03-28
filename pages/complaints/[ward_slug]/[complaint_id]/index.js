@@ -6,58 +6,20 @@ import Image from "next/image";
 
 import Completed from "../../../../assets/icons/COMPLETED.svg";
 import Pending from "../../../../assets/icons/PENDING.svg";
-import Share from "../../../../assets/icons/share.svg";
 import SendSVG from "../../../../assets/icons/send.svg";
 import CommentList from "../../../../components/CommentsComponents/CommentList";
-
-import Upvote from "../../../../components/complaints/upvote";
-import Downvote from "../../../../components/complaints/downvote";
-import ShareCard from "../../../../components/shareCard";
 import { Tooltip } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import MapComponent from "../../../../components/Mapcomponents/MapComponent";
 
+import ComplaintDesc from "../../../../components/DetailedComplaint/ComplaintDesc";
+import UpvoteDownvoteShare from "../../../../components/DetailedComplaint/UpvoteDownvoteShare";
+
 const getUpdates = async (complaintId) => {
-  const url = `${BACKEND_URL}councillor/get_updates`;
+  const url = `${BACKEND_URL}authority/councillor/get_updates?complaint_id=${complaintId}`;
   const response = await axios.get(url);
   const data = await response.data;
   return data;
-};
-
-function MarkAsResolved({ setComplaintStatus, token, complaint_id }) {
-  const router = useRouter();
-  return (
-    <div className="text-center text-xs">
-      <p className="mb-2">Are you sure?</p>
-      <button
-        className="bg-zinc-900 text-zinc-200 px-2 py-1 rounded-md"
-        onClick={async () => {
-          const resp = await handleMarkAsResolved(token, complaint_id);
-          if (resp.status === 401) router.push("auth/login");
-          else if (resp.status === 200) setComplaintStatus("COMPLETED");
-        }}
-      >
-        Resolved
-      </button>
-    </div>
-  );
-}
-
-const handleMarkAsResolved = async (token, complaint_id) => {
-  const url = `${BACKEND_URL}councillor/change_status`;
-  const response = await axios
-    .post(
-      url,
-      {
-        complaint_id
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-
-    )
 };
 
 function Complaint_ID({
@@ -69,22 +31,43 @@ function Complaint_ID({
 }) {
   const router = useRouter();
   const [complaintStatus, setComplaintStatus] = React.useState("");
-  const [vote, setVote] = React.useState(0);
   const [username, setUsername] = React.useState("");
   const [profile_picture, setProfilePicture] = React.useState("");
   const [updatesOnComplaint, setUpdatesOnComplaint] = React.useState([]);
-  const [compalintdata, setComplaintData] = React.useState({});
+  const [complaintData, setComplaintData] = React.useState({});
 
   const UpdateRef = React.useRef();
 
-  const addUpdate = async ({ complaint_id, update_text, token }) => {
-    const url = `${BACKEND_URL}councillor/make_updates`;
+  function MarkAsResolved(setComplaintStatus, complaint_id) {
+    const router = useRouter();
+    return (
+      <div className="text-center text-xs">
+        <p className="mb-2">Are you sure?</p>
+        <button
+          className="bg-zinc-900 text-zinc-200 px-2 py-1 rounded-md"
+          onClick={async () => {
+            const resp = await handleMarkAsResolved(complaint_id);
+            if (resp.status === 401) {
+              return resp.status;
+            } else if (resp.status === 200) {
+              setComplaintStatus("COMPLETED");
+              alert("Complaint marked as resolved");
+            }
+          }}
+        >
+          Resolved
+        </button>
+      </div>
+    );
+  }
+
+  const handleMarkAsResolved = async (complaint_id) => {
+    const url = `${BACKEND_URL}authority/councillor/change_status/?complaint_id=${complaint_id}`;
     const response = await axios
       .post(
         url,
         {
           complaint_id,
-          update_text,
         },
         {
           headers: {
@@ -101,6 +84,30 @@ function Complaint_ID({
     return response;
   };
 
+  const addUpdate = async (complaint_id, update_text) => {
+    const url = `${BACKEND_URL}authority/councillor/make_updates`;
+    const response = await axios
+      .post(
+        url,
+        {
+          complaint_id,
+          update_text,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        return res.status;
+      })
+      .catch((err) => {
+        return err.response;
+      });
+    return response;
+  };
+
   useEffect(() => {
     if (Complaint) {
       setComplaintData(Complaint);
@@ -108,22 +115,33 @@ function Complaint_ID({
     }
   }, [Complaint]);
 
-  console.log("compalint data",compalintdata);
+  useEffect(() => {
+    if (Complaint) {
+      setComplaintData(Complaint);
+      getUpdates(Complaint.id).then((data) => setUpdatesOnComplaint(data));
+    }
+  }, [updatesOnComplaint]);
 
   useEffect(() => {
     if (UserProfile) {
-      setUsername(UserProfile.username);
+      console.log("user profile",UserProfile)
+      setUsername(Complaint.username);
       setProfilePicture(UserProfile.profile_picture);
-      getUpdates(Complaint.id).then((data) => setUpdatesOnComplaint(data));
     }
   }, [UserProfile]);
+
+  useEffect(() => {
+    if (Complaint) {
+      setComplaintStatus(Complaint.complaint_Status);
+    }
+  }, [complaintStatus]);
 
   return (
     <div className="flex md:ml-60 pt-14 md:pt-8 pb-2 lg:flex-row flex-col">
       <div className="flex-1 flex-col items-center px-2 lg:border-r-[1px] border-gray-400">
         <div
           className={`mx-2 px-2 shadow-sm flex items-center gap-2 ${
-            compalintdata.complaint_Status === "PENDING"
+            complaintData.complaint_Status === "PENDING"
               ? "bg-orange-50"
               : "bg-green-50"
           } rounded-sm mb-2`}
@@ -155,33 +173,37 @@ function Complaint_ID({
               </Tooltip>
             </div>
           </div>
-          {compalintdata.completed_status == "PENDING" && (
-              <Tooltip
-                content={
-                  <MarkAsResolved
-                    setComplaintStatus={setComplaintStatus}
-                    token={token}
-                    complaint_id={Complaint.id}
-                  />
-                }
-                placement="bottom"
-              >
-                <div className="text-xs px-2 py-1 bg-zinc-800 text-zinc-100 rounded-xl">
-                  Mark as completed
-                </div> 
-              </Tooltip>
-            )}
-          <Tooltip content={complaintStatus.toLowerCase()} placement="left">
-            {compalintdata.complaintStatus == "COMPLETED" ? (
+          {complaintData.completed_status == "PENDING" ? (
+            <Tooltip
+              content={
+                <MarkAsResolved
+                  setComplaintStatus={setComplaintStatus}
+                  token={token}
+                  complaint_id={Complaint.id}
+                />
+              }
+              placement="bottom"
+            >
+              <div className="text-xs px-2 py-1 bg-zinc-800 text-zinc-100 rounded-xl">
+                Mark as completed
+              </div>
+            </Tooltip>
+          ):(
+            <div className="text-xs px-2 py-1 bg-green-800 text-green-100 rounded-xl">
+              Completed
+            </div>
+          )}
+          {/* <Tooltip content={complaintStatus.toLowerCase()} placement="left">
+            {complaintData.complaintStatus == "COMPLETED" ? (
               <Completed className="fill-green-800 h-7 w-7" />
             ) : (
               <Pending className="fill-yellow-500 h-7 w-7" />
             )}
-          </Tooltip>
+          </Tooltip> */}
         </div>
         <div className="flex min-h-60 h-80 w-90 overflow-hidden rounded-md relative mx-3">
           <Image
-            src={compalintdata.photo_url}
+            src={complaintData.photo_url}
             alt="Picture of the complaint"
             layout="fill"
             sizes="(max-width: 768px) 100vw,
@@ -190,62 +212,13 @@ function Complaint_ID({
           />
         </div>
         <div className="flex gap-6 px-4 py-2 items-center bg-gray-200 shadow-sm shadow-slate-400 m-3 rounded-sm">
-          <div className="flex gap-3 items-center">
-            <Upvote
-              setVote={setVote}
-              setLikeCount={compalintdata.like_count}
-              ComplaintId={compalintdata.id}
-              token={token}
-              vote={vote}
-              placement="top"
-            />
-            <p className="text-center text-sm font-semibold">
-              {compalintdata.like_count}
-            </p>
-            <Downvote
-              setVote={setVote}
-              setLikeCount={compalintdata.like_count}
-              ComplaintId={compalintdata.id}
-              token={token}
-              vote={vote}
-              placement="bottom"
-            />
-          </div>
-          <div className="">
-            <Tooltip
-              content={
-                <div className="flex gap-2">
-                  <ShareCard
-                    url={router.asPath}
-                    title={compalintdata.complaint_title}
-                    flexDirection="flex-row"
-                  />
-                </div>
-              }
-              placement="right"
-            >
-              <Share className="fill-slate-500" />
-            </Tooltip>
-          </div>
+          <UpvoteDownvoteShare complaintData={complaintData}/>
         </div>
         <div className="m-3">
-          <div className="flex flex-wrap items-start gap-2 my-2 text-white text-xs md:text-sm">
-            <div className="bg-gray-500 rounded-lg py-1 px-2">
-              {ComplaintType.type_name}
-            </div>
-            <div className="bg-gray-500 rounded-lg py-1 px-2">
-              {ComplaintSubType.sub_type_name}
-            </div>
-          </div>
-          <h1 className="text-lg font-semibold">
-            {compalintdata.complaint_title}
-          </h1>
-          <article className="text-sm font-thin pl-2">
-            {compalintdata.complaint_desc}
-          </article>
+          <ComplaintDesc ComplaintType={ComplaintType} ComplaintSubType = {ComplaintSubType} complaintData={complaintData}/>
         </div>
-        <div className="z-[15] fixed shadow-2xl shadow-slate-900 ">
-          <CommentList complaintId={compalintdata.id} token={token} />
+        <div className="shadow-2xl ">
+          <CommentList complaintId={complaintData.id} token={token} />
         </div>
       </div>
       <div className="flex flex-1 flex-col">
@@ -254,11 +227,12 @@ function Complaint_ID({
         </div>
         <div className="py-2 px-4 text-xl ">
           <h1 className="font-thin">Updates on Complaint</h1>
-          <h3 className="">Add updates: </h3>
+          <h3 className="">Add updates here: </h3>
           <form className="flex ml-2 gap-2">
             <textarea
               ref={UpdateRef}
-              maxLength={150}
+              maxLength="150"
+              minLength="10"
               className="flex-1 text-sm font-semibold max-h-16 resize-none border-2 my-2 px-2 py-1 rounded-sm border-zinc-400 focus:outline-none focus:border-zinc-600"
               placeholder="Add an update"
             ></textarea>
@@ -266,13 +240,14 @@ function Complaint_ID({
               className="bg-zinc-900  overflow-hidden text-zinc-200 px-2 py-1 rounded-xl my-3"
               onClick={async (e) => {
                 e.preventDefault();
+                if(UpdateRef.current.value.length < 10) return alert("Update should be atleast 10 characters long")
                 const status = await addUpdate(
-                  compalintdata.id,
+                  complaintData.id,
                   UpdateRef.current.value
                 );
-                if (status) {
+                if (status == 200) {
                   UpdateRef.current.value = "";
-                } else {
+                } else if (status == 401) {
                   router.push("auth/login");
                 }
               }}
@@ -311,6 +286,7 @@ function Complaint_ID({
         </div>
       </div>
     </div>
+    // <>asdfa</>
   );
 }
 export default Complaint_ID;
@@ -362,7 +338,7 @@ export async function getServerSideProps({ req, res, params }) {
       notFound: true,
     };
   }
-  // console.log(complaint_data);
+  console.log("complaint info",complaint_data);
 
   return {
     props: {

@@ -11,8 +11,8 @@ function CommentList({ complaintId, parent_comment_id, token }) {
   const commentRef = React.useRef();
   var url;
   if (parent_comment_id)
-    url = `${BACKEND_URL}/complaints/${complaintId}/comments?parent_comment_id=${parent_comment_id}`;
-  else url = `${BACKEND_URL}/complaints/${complaintId}/comments`;
+    url = `${BACKEND_URL}complaints/${complaintId}/comments?parent_comment_id=${parent_comment_id}`;
+  else url = `${BACKEND_URL}complaints/${complaintId}/comments`;
   const currentPath = router.asPath.split("#")[0];
 
   React.useEffect(() => {
