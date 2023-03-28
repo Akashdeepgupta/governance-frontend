@@ -7,20 +7,18 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
  export default function Navbar() {
   const [ToggleMenu, setToggleMenu] = React.useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(Cookies.get('isLoggedIn')||false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
   
-  console.log("hii",Cookies.get('isLoggedIn'))
-  console.log("state",isLoggedIn)
 
   useEffect(() => {
     const isUserLoggedIn = Cookies.get('isLoggedIn');
     if (isUserLoggedIn) {
-      setIsLoggedIn(true);
+      setIsLoggedIn(true); 
     }
-  }, [isLoggedIn],[Cookies.get('isLoggedIn')],[]); 
+  }); 
 
-
+ console.log("rendered");
   return (
     <>
       {/* mobile menu */}

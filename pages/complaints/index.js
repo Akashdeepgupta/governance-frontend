@@ -29,15 +29,15 @@ import {
 } from "react-instantsearch-dom";
 
 const searchClient = algoliasearch(
-  "7EZSSRLOLR",
-  "25c7cb6a837952c67aac05d561c3c32b"
+  "MUM7JXG8NH",
+  "368b81ac1505a0bf2f461971d6f208ba"
 );
 
 const Index = ({ token, ward_slug }) => {
 
   return (
     <div className="md:ml-60 ">
-      <InstantSearch indexName="challenge2" searchClient={searchClient}>
+      <InstantSearch indexName="dev_CARTOONS" searchClient={searchClient}>
         <Configure filters={`ward_slug:${ward_slug}`} hitsPerPage={1} />
         
         <div className="flex ">
@@ -59,10 +59,10 @@ const Index = ({ token, ward_slug }) => {
             </Panel>
             <Panel header="Filters" className="pt-4">
               <SortBy
-                defaultRefinement="challenge2_most_voted"
+                defaultRefinement="dev_CARTOONS_most_voted"
                 items={[
-                  { label: "Recent", value: "challenge2" },
-                  { label: "most voted", value: "challenge2_most_voted" },
+                  { label: "Recent", value: "dev_CARTOONS" },
+                  { label: "most voted", value: "dev_CARTOONS_most_voted" },
                 ]}
               />
             </Panel>
