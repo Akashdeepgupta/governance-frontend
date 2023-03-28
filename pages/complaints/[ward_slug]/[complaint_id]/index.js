@@ -14,6 +14,7 @@ import MapComponent from "../../../../components/Mapcomponents/MapComponent";
 
 import ComplaintDesc from "../../../../components/DetailedComplaint/ComplaintDesc";
 import UpvoteDownvoteShare from "../../../../components/DetailedComplaint/UpvoteDownvoteShare";
+import {getCouncillorUpdates} from '../../../../utils';
 
 const getUpdates = async (complaintId) => {
   const url = `${BACKEND_URL}authority/councillor/get_updates?complaint_id=${complaintId}`;
@@ -43,7 +44,7 @@ function Complaint_ID({
     return (
       <div className="text-center text-xs">
         <p className="mb-2">Are you sure?</p>
-        <button
+        {complaintStatus == 'PENDING' &&<button
           className="bg-zinc-900 text-zinc-200 px-2 py-1 rounded-md"
           onClick={async () => {
             const resp = await handleMarkAsResolved(complaint_id);
@@ -51,12 +52,11 @@ function Complaint_ID({
               return resp.status;
             } else if (resp.status === 200) {
               setComplaintStatus("COMPLETED");
-              alert("Complaint marked as resolved");
             }
           }}
         >
           Resolved
-        </button>
+        </button>}
       </div>
     );
   }
@@ -131,9 +131,11 @@ function Complaint_ID({
   }, [UserProfile]);
 
   useEffect(() => {
-    if (Complaint) {
-      setComplaintStatus(Complaint.complaint_Status);
-    }
+    if(Complaint){
+    getCouncillorUpdates(Complaint.id).then((data) => {
+      setComplaintStatus(data.completed_status);
+    });
+  }
   }, [complaintStatus]);
 
   return (
@@ -141,7 +143,7 @@ function Complaint_ID({
       <div className="flex-1 flex-col items-center px-2 lg:border-r-[1px] border-gray-400">
         <div
           className={`mx-2 px-2 shadow-sm flex items-center gap-2 ${
-            complaintData.complaint_Status === "PENDING"
+            complaintStatus === "PENDING"
               ? "bg-orange-50"
               : "bg-green-50"
           } rounded-sm mb-2`}
@@ -173,7 +175,7 @@ function Complaint_ID({
               </Tooltip>
             </div>
           </div>
-          {complaintData.completed_status == "PENDING" ? (
+          {complaintStatus == "PENDING" ? (
             <Tooltip
               content={
                 <MarkAsResolved
@@ -214,6 +216,10 @@ function Complaint_ID({
         <div className="flex gap-6 px-4 py-2 items-center bg-gray-200 shadow-sm shadow-slate-400 m-3 rounded-sm">
           <UpvoteDownvoteShare complaintData={complaintData}/>
         </div>
+        {/* <div>
+          <h1>{complaintData.completed_status}</h1>
+          <h1>{complaintStatus}</h1>
+        </div> */}
         <div className="m-3">
           <ComplaintDesc ComplaintType={ComplaintType} ComplaintSubType = {ComplaintSubType} complaintData={complaintData}/>
         </div>
