@@ -5600,6 +5600,15 @@ react-instantsearch-core@6.39.0:
     prop-types "^15.6.2"
     react-fast-compare "^3.0.0"
 
+react-instantsearch-dom-maps@^6.39.1:
+  version "6.39.1"
+  resolved "https://registry.yarnpkg.com/react-instantsearch-dom-maps/-/react-instantsearch-dom-maps-6.39.1.tgz#5b1ad50e302710015cffab9dbcdbf72a142bfc9b"
+  integrity sha512-bhTco1+uAFBFtXrUF1ZPlh0mgo2XOk1+lzQRnrWmVeKdJQOWWxfSc0errjk4Kc9qvpDYVI7GO9gDGEQmRTn1Gg==
+  dependencies:
+    "@babel/runtime" "^7.1.2"
+    prop-types "^15.6.2"
+    scriptjs "^2.5.8"
+
 react-instantsearch-dom@^6.11.0, react-instantsearch-dom@^6.39.0:
   version "6.39.0"
   resolved "https://registry.yarnpkg.com/react-instantsearch-dom/-/react-instantsearch-dom-6.39.0.tgz#4d42efd4f92de14437e57c9a66c01e0fde92d5ae"
@@ -5902,6 +5911,11 @@ schema-utils@^3.1.1:
     "@types/json-schema" "^7.0.8"
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
+
+scriptjs@^2.5.8:
+  version "2.5.9"
+  resolved "https://registry.yarnpkg.com/scriptjs/-/scriptjs-2.5.9.tgz#343915cd2ec2ed9bfdde2b9875cd28f59394b35f"
+  integrity sha512-qGVDoreyYiP1pkQnbnFAUIS5AjenNwwQBdl7zeos9etl+hYKWahjRTfzAZZYBv5xNHx7vNKCmaLDQZ6Fr2AEXg==
 
 "semver@2 || 3 || 4 || 5":
   version "5.7.1"
