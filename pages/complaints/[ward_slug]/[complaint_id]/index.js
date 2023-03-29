@@ -37,7 +37,7 @@ function Complaint_ID({
 
   const UpdateRef = React.useRef();
 
-  function MarkAsResolved(setComplaintStatus, complaint_id) {
+  function MarkAsResolved({setComplaintStatus, complaint_id}) {
     const router = useRouter();
     return (
       <div className="text-center text-xs">
@@ -60,6 +60,7 @@ function Complaint_ID({
   }
 
   const handleMarkAsResolved = async (complaint_id) => {
+    console.log(complaint_id)
     const url = `${BACKEND_URL}authority/councillor/change_status/?complaint_id=${complaint_id}`;
     const response = await axios
       .post(
