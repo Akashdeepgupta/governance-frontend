@@ -4,8 +4,6 @@ import BACKEND_URL from "../../../../utils";
 import { format, formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 
-import Completed from "../../../../assets/icons/COMPLETED.svg";
-import Pending from "../../../../assets/icons/PENDING.svg";
 import SendSVG from "../../../../assets/icons/send.svg";
 import CommentList from "../../../../components/CommentsComponents/CommentList";
 import { Tooltip } from "@nextui-org/react";
@@ -100,7 +98,7 @@ function Complaint_ID({
         }
       )
       .then((res) => {
-        return res.status;
+        return res;
       })
       .catch((err) => {
         return err.response;
@@ -113,18 +111,10 @@ function Complaint_ID({
       setComplaintData(Complaint);
       getUpdates(Complaint.id).then((data) => setUpdatesOnComplaint(data));
     }
-  }, [Complaint]);
-
-  useEffect(() => {
-    if (Complaint) {
-      setComplaintData(Complaint);
-      getUpdates(Complaint.id).then((data) => setUpdatesOnComplaint(data));
-    }
-  }, [updatesOnComplaint]);
+  }, []);
 
   useEffect(() => {
     if (UserProfile) {
-      console.log("user profile",UserProfile)
       setUsername(Complaint.username);
       setProfilePicture(UserProfile.profile_picture);
     }
@@ -195,13 +185,6 @@ function Complaint_ID({
               Completed
             </div>
           )}
-          {/* <Tooltip content={complaintStatus.toLowerCase()} placement="left">
-            {complaintData.complaintStatus == "COMPLETED" ? (
-              <Completed className="fill-green-800 h-7 w-7" />
-            ) : (
-              <Pending className="fill-yellow-500 h-7 w-7" />
-            )}
-          </Tooltip> */}
         </div>
         <div className="flex min-h-60 h-80 w-90 overflow-hidden rounded-md relative mx-3">
           <Image
@@ -216,10 +199,6 @@ function Complaint_ID({
         <div className="flex gap-6 px-4 py-2 items-center bg-gray-200 shadow-sm shadow-slate-400 m-3 rounded-sm">
           <UpvoteDownvoteShare complaintData={complaintData}/>
         </div>
-        {/* <div>
-          <h1>{complaintData.completed_status}</h1>
-          <h1>{complaintStatus}</h1>
-        </div> */}
         <div className="m-3">
           <ComplaintDesc ComplaintType={ComplaintType} ComplaintSubType = {ComplaintSubType} complaintData={complaintData}/>
         </div>
@@ -247,13 +226,17 @@ function Complaint_ID({
               onClick={async (e) => {
                 e.preventDefault();
                 if(UpdateRef.current.value.length < 10) return alert("Update should be atleast 10 characters long")
-                const status = await addUpdate(
+                const dataupdate = await addUpdate(
                   complaintData.id,
                   UpdateRef.current.value
                 );
-                if (status == 200) {
+                if (dataupdate.status == 200) {
                   UpdateRef.current.value = "";
-                } else if (status == 401) {
+                  setUpdatesOnComplaint((prev) => [
+                    dataupdate.data,
+                    ...prev,
+                  ]);
+                } else if (dataupdate.status == 401) {
                   router.push("auth/login");
                 }
               }}
@@ -292,7 +275,6 @@ function Complaint_ID({
         </div>
       </div>
     </div>
-    // <>asdfa</>
   );
 }
 export default Complaint_ID;
@@ -344,7 +326,6 @@ export async function getServerSideProps({ req, res, params }) {
       notFound: true,
     };
   }
-  console.log("complaint info",complaint_data);
 
   return {
     props: {

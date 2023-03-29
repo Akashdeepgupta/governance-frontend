@@ -18,7 +18,6 @@ import { useRouter } from "next/router";
     }
   }); 
 
- console.log("rendered");
   return (
     <>
       {/* mobile menu */}
