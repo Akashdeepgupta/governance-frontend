@@ -142,7 +142,7 @@ export default function Hit(props) {
               <div className="bg-gray-500 rounded-lg py-1 px-2 text-white text-sm">
                 {complaint_type_name}
               </div>
-              <div>
+              <div className="ml-auto bg-gray-500 rounded-lg py-1 px-2 text-white text-sm ">
                 <h1>Councillor's Status: {councillorstatus}</h1>
               </div>
               <Link href={`/complaints/${ward_slug}/${objectID}`}>

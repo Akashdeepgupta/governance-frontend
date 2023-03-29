@@ -36,7 +36,7 @@ function UpvoteDownvoteShare({ complaintData }) {
             <Share className="fill-slate-500" />
           </Tooltip>
         </div>
-        <div className="ml-auto">
+        <div className="ml-28">
             From user Side: {complaintData.completed_status}
         </div>
       </div>
