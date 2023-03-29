@@ -8,8 +8,8 @@ import Share from "../../assets/icons/share.svg";
 function UpvoteDownvoteShare({ complaintData }) {
   const router = useRouter();
   return (
-    <div>
-      <div className="flex gap-3 items-center">
+      <div className="flex">
+        <div className="flex gap-3 items-center">
         <Tooltip content={"Upvote"}>
           <UpvoteSVG className="fill-slate-500 " />
         </Tooltip>
@@ -28,19 +28,20 @@ function UpvoteDownvoteShare({ complaintData }) {
                   url={router.asPath}
                   title={complaintData.complaint_title}
                   flexDirection="flex-row"
-                />
+                  />
               </div>
             }
             placement="right"
-          >
+            >
             <Share className="fill-slate-500" />
           </Tooltip>
         </div>
-        <div className="ml-28">
+        </div>
+
+        <div className="bg-gray-700 rounded-md text-white px-3 py-1 ml-[19rem]">
             From user Side: {complaintData.completed_status}
         </div>
       </div>
-    </div>
   );
 }
 
